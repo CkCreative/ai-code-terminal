@@ -183,7 +183,7 @@ describe('Environment Configuration', () => {
       environment.validate();
 
       expect(console.log).toHaveBeenCalledWith(
-        'Environment validated: development mode on port 3014 for tenants: test-user'
+        'Environment validated: test mode on port 3014 for tenants: test-user'
       );
     });
 
