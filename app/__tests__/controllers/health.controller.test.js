@@ -8,7 +8,7 @@ jest.mock('winston-daily-rotate-file', () => {
     format: null
   }));
 });
-jest.mock('../../src/services/shell.service', () => ({
+jest.mock('../../src/services/multiplex-shell.service', () => ({
   activeSessions: new Map(),
   socketToWorkspace: new Map(),
   createPtyForSocket: jest.fn(),
@@ -54,7 +54,7 @@ jest.mock('../../src/config/database', () => ({
 const HealthController = require('../../src/controllers/health.controller');
 const environment = require('../../src/config/environment');
 
-const shellService = require('../../src/services/shell.service');
+const shellService = require('../../src/services/multiplex-shell.service');
 const workspaceService = require('../../src/services/workspace.service');
 const resourceService = require('../../src/services/resource.service');
 const githubService = require('../../src/services/github.service');
@@ -221,10 +221,19 @@ describe('HealthController', () => {
 
   describe('getSystemStats', () => {
     it('should return system stats', async () => {
-      // Mock service responses
+      // Mock service responses - match the expected structure from multiplex-shell.service
       shellService.getSessionStats.mockReturnValue({
         totalSessions: 2,
-        sessions: [{ id: 'session1' }, { id: 'session2' }]
+        workspaces: [
+          {
+            workspaceId: 'workspace1',
+            sessions: [{ id: 'session1', status: 'active' }]
+          },
+          {
+            workspaceId: 'workspace2', 
+            sessions: [{ id: 'session2', status: 'active' }]
+          }
+        ]
       });
       
       workspaceService.listWorkspaces.mockResolvedValue([

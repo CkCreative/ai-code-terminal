@@ -79,6 +79,11 @@ const ThemeService = require('../../src/services/theme.service');
 describe('ThemeService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // Reset ThemeGenerator mocks
+    ThemeGenerator.generateAllThemes.mockReturnValue(mockThemesData.themes);
+    ThemeGenerator.generateTheme.mockImplementation((paletteId) => {
+      return mockThemesData.themes.find(theme => theme.id === paletteId) || mockThemesData.themes[0];
+    });
     // Manually set test data for the already-loaded service
     ThemeService.themes = mockThemesData;
   });
@@ -369,16 +374,16 @@ describe('ThemeService', () => {
 
   describe('Error Handling', () => {
     it('should handle file read errors in loadThemes', () => {
-      // Mock fs.readFileSync to throw an error
-      fs.readFileSync.mockImplementation(() => {
-        throw new Error('File not found');
+      // Mock ThemeGenerator.generateAllThemes to throw an error
+      ThemeGenerator.generateAllThemes.mockImplementation(() => {
+        throw new Error('Palette generation failed');
       });
 
       // Create a new instance to trigger loadThemes
       const testService = new (require('../../src/services/theme.service').constructor)();
 
       expect(testService.themes).toEqual({ themes: [] });
-      expect(logger.error).toHaveBeenCalledWith('Failed to load themes:', expect.any(Error));
+      expect(logger.error).toHaveBeenCalledWith('Failed to generate themes from palettes:', expect.any(Error));
     });
 
     it('should handle getAllThemes failure in getThemesByType', () => {
