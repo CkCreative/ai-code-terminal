@@ -5,7 +5,7 @@ services:
   act:
     # Pull the image from Docker Hub instead of building it.
     # You can pin to a specific version like 'editoredit/act:1.0.0' for stability.
-    image: editoredit/act:1.0.0
+    image: editoredit/act:1.0.1
 
     container_name: act_production
     restart: unless-stopped

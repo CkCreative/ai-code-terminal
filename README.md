@@ -71,7 +71,7 @@ Website: [act.drmhse.com](https://act.drmhse.com)
 
 4.  Start the application:
     ```bash
-    docker-compose up -d
+    docker-compose up -d --build
     ```
 
 5.  Open `http://[your-server-ip/domain]:3014` in your browser and log in with your authorized GitHub account.

@@ -23,6 +23,9 @@ Intelligent workspace creation, repository cloning, and project organization wit
 ## Theme System
 Comprehensive theming system with predefined themes and customizable color schemes for optimal development experience.
 
+## File Editor
+Integrated CodeMirror editor with syntax highlighting for 20+ languages, theme synchronization, and read-only preview modes for efficient file navigation and quick edits.
+
 ## Real-time Features
 WebSocket-powered real-time communication for terminal sessions, workspace updates, and system notifications.
 

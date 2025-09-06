@@ -85,11 +85,11 @@ Copy the output and use it as your `JWT_SECRET`.
 Launch the application using Docker Compose:
 
 ```bash
-docker-compose up -d
+docker-compose up -d --build
 ```
 
 This will:
-- Build the Docker container with all dependencies
+- Build the Docker container from source with all dependencies
 - Set up secure, isolated volumes for your data
 - Start the application on port 3014
 - Configure automatic restarts
@@ -181,13 +181,13 @@ docker-compose down
 ### Update to a New Version
 ```bash
 git pull origin main
-docker-compose build --no-cache
-docker-compose up -d
+docker-compose down
+docker-compose up -d --build
 ```
 
 ### Access the Container
 ```bash
-docker-compose exec ai-code-terminal bash
+docker-compose exec act bash
 ```
 
 ## Troubleshooting
