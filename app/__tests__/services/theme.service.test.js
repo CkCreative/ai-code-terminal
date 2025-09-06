@@ -17,8 +17,10 @@ jest.mock('winston-daily-rotate-file', () => {
   }));
 });
 jest.mock('../../src/utils/logger');
+jest.mock('../../src/utils/theme-generator');
 
 const logger = require('../../src/utils/logger');
+const ThemeGenerator = require('../../src/utils/theme-generator');
 
 // Set up initial file mock before requiring the service
 const mockThemesData = {
@@ -64,8 +66,12 @@ const mockThemesData = {
   ]
 };
 
-// Mock the file read to return our test data
-fs.readFileSync.mockReturnValue(JSON.stringify(mockThemesData));
+// Mock ThemeGenerator methods
+ThemeGenerator.generateAllThemes = jest.fn().mockReturnValue(mockThemesData.themes);
+ThemeGenerator.generateTheme = jest.fn().mockImplementation((paletteId) => {
+  return mockThemesData.themes.find(theme => theme.id === paletteId) || mockThemesData.themes[0];
+});
+ThemeGenerator.getAvailablePalettes = jest.fn().mockReturnValue(['vscode-dark', 'github-light']);
 
 // Now require the service after mocks are set up
 const ThemeService = require('../../src/services/theme.service');

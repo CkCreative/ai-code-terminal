@@ -41,8 +41,6 @@ Website: [act.drmhse.com](https://act.drmhse.com)
 
 ![Modern Theme Selection Modal](assets/theme_selection.png)
 *Choose from 18 carefully crafted themes with live preview*
-
-![Theme Customization](assets/choose_favorite_theme.png)
 *Consistent theming across terminals and interface elements*
 
 ## Philosophy
@@ -59,7 +57,7 @@ Website: [act.drmhse.com](https://act.drmhse.com)
 -   **Built-in Code Editor:** Powered by CodeMirror 6 with syntax highlighting for 15+ languages (JavaScript, Python, Go, Rust, Java, CSS, HTML, SQL, and more)
 -   **Direct File Editing:** Edit code directly in the browser with modern editor features
 
-### Advanced Terminal Multiplexing  
+### Advanced Terminal Multiplexing
 -   **Multiple Terminal Tabs:** Create and manage multiple terminal sessions per workspace
 -   **Split Pane Layouts:** Organize terminals in horizontal, vertical, and grid layouts for maximum productivity
 -   **Session Persistence:** Your terminal sessions survive browser refreshes and reconnections
