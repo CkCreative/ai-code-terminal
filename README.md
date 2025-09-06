@@ -2,9 +2,9 @@
 
 [![CI](https://github.com/drmhse/ai-code-terminal/actions/workflows/pr-tests.yml/badge.svg)](https://github.com/drmhse/ai-code-terminal/actions/workflows/pr-tests.yml) [![Coverage Status](https://coveralls.io/repos/github/drmhse/ai-code-terminal/badge.svg?branch=main)](https://coveralls.io/github/drmhse/ai-code-terminal?branch=main)
 
-The modern development workflow is shifting back to the terminal, now supercharged by AI agents like Claude Code, Qwen-Code, and the Gemini CLI. Heavy, resource-intensive IDEs are no longer a prerequisite for productive coding. All you need is a shell.
+The modern development workflow is shifting back to the terminal, now supercharged by AI agents like Claude Code, Qwen-Code, and the Gemini CLI. Heavy, resource-intensive IDEs are no longer a prerequisite for productive coding. All you need is a powerful, integrated terminal environment.
 
-ACT is the bridge to this new paradigm. It is a self-hosted, sovereign environment that gives you a persistent, root-level shell accessible from any browser, on any device. It is built for the developer on the go, who values speed, control, and the power of a minimal-footprint, AI-driven workflow.
+ACT is a lightweight, terminal-centric web IDE that bridges the gap between a simple shell and a full-featured development environment. It provides a self-hosted, sovereign workspace with full shell access within a secure, isolated container environment. Built for developers who value speed, control, and the power of a minimal-footprint, AI-driven workflow.
 
 ![Node.js](https://img.shields.io/badge/Node.js-18+-blue)
 ![Docker](https://img.shields.io/badge/Docker-Ready-blue)
@@ -14,32 +14,76 @@ Website: [act.drmhse.com](https://act.drmhse.com)
 
 ## Features
 
-### Access your favorite AI agents from the browser; a terminal that's truly portable and lightweight
+### Integrated File Explorer & Code Editor
+
+![File Preview and Editing](assets/file_preview.png)
+*Built-in CodeMirror 6 editor with syntax highlighting for 15+ languages*
+
+### Advanced Terminal Multiplexing
+
+![Multiple Terminal Tabs](assets/multi_tab_view.png)
+*Multiple terminal tabs with integrated file explorer and command history*
+
+![Split Pane Terminal Layout](assets/multiple_pane_view.png)
+*Advanced split-pane layouts with synchronized file management*
+
+### Mobile-First Repository Management
+
+![Mobile View](assets/moble_view_repo_editor.jpeg)
+*Complete development environment accessible from any device*
+
+### AI-Powered Development Workflow
 
 ![Claude Code in Action](assets/claude_code_in_action.png)
+*Seamless integration with CLI-based AI tools*
 
-### Clone a github repository and start coding
+### Professional Theme Selection
 
-![Repository Search](assets/repository_search_and_list.png)
+![Modern Theme Selection Modal](assets/theme_selection.png)
+*Choose from 18 carefully crafted themes with live preview*
 
-### Customize your terminal experience
-
-![Choose Your Favorite Theme](assets/choose_favorite_theme.png)
+![Theme Customization](assets/choose_favorite_theme.png)
+*Consistent theming across terminals and interface elements*
 
 ## Philosophy
 
--   **The Post-IDE Era:** In 2025, a powerful shell is a complete development environment. ACT provides that environment, wherever you are.
--   **Lightweight & Fast:** While cloud IDEs replicate heavy desktop experiences, ACT environment is a single, lean shell process. It's fast, responsive, and uses minimal resources.
+-   **Terminal-First Development:** ACT combines the power of a full-featured IDE with the simplicity and speed of a terminal-based workflow. Integrated file management, code editing, and advanced terminal multiplexing in one lightweight package.
+-   **Lightweight & Fast:** While cloud IDEs replicate heavy desktop experiences, ACT provides essential development tools without the bloat. Fast, responsive, and uses minimal resources.
 -   **AI-Native:** Designed from the ground up for a workflow centered around CLI-based AI tools. Your terminal becomes a conversation with your codebase.
 -   **Absolute Sovereignty:** Your code, your AI interactions, and your environment are hosted on your infrastructure. No third-party access, no compromises.
 
-## Features
+## Core Features
 
--   **Develop From Any Device:** Turn a tablet, a Chromebook, or even a phone into a viable development machine with a persistent, powerful shell.
--   **The AI-Native Shell:** Perfect for modern tools like `claude`, `qwen`, and `gemini-cli`. Let AI agents read your code, write tests, and run commands in a secure, contained environment.
--   **God-Mode Terminal Access:** A high-fidelity, browser-based terminal with full root access. Use `git`, `ssh`, `docker`, and anything else you need.
--   **Persistent Workspaces:** Clone your GitHub repositories into isolated, persistent workspaces on your server. Your session stays alive even when you close the browser.
--   **Secure & Self-Hosted:** Authenticates a single GitHub user. Deploy in minutes with a security-hardened Docker container on your own hardware.
+### Integrated File Explorer & Code Editor
+-   **Full-Featured File Browser:** Navigate directories, view files, and manage your project structure in an intuitive sidebar
+-   **Built-in Code Editor:** Powered by CodeMirror 6 with syntax highlighting for 15+ languages (JavaScript, Python, Go, Rust, Java, CSS, HTML, SQL, and more)
+-   **Direct File Editing:** Edit code directly in the browser with modern editor features
+
+### Advanced Terminal Multiplexing  
+-   **Multiple Terminal Tabs:** Create and manage multiple terminal sessions per workspace
+-   **Split Pane Layouts:** Organize terminals in horizontal, vertical, and grid layouts for maximum productivity
+-   **Session Persistence:** Your terminal sessions survive browser refreshes and reconnections
+
+### Long-Running Process Management
+-   **Process Supervisor:** Automatically detect and track long-running commands (servers, build processes, etc.)
+-   **Process Monitoring:** View, stop, and restart processes through the integrated interface
+-   **Auto-Recovery:** Crashed processes can be automatically restarted
+
+### System Resource Monitoring
+-   **Real-Time Insights:** Status bar shows active sessions, CPU usage, memory consumption, and workspace storage
+-   **Container-Aware:** Displays Docker container limits and resource utilization
+-   **Performance Tracking:** Monitor your development environment's health at a glance
+
+### Enterprise-Grade Security
+-   **Secure Container Environment:** Full shell access within a security-hardened, isolated container
+-   **Single-Tenant Authentication:** GitHub OAuth restricted to authorized users only
+-   **Self-Hosted:** Complete control over your code, data, and AI interactions
+
+### Developer Experience
+-   **Develop From Any Device:** Turn a tablet, Chromebook, or phone into a viable development machine
+-   **AI-Native Workflow:** Perfect integration with CLI-based AI tools like Claude Code, Qwen, and Gemini CLI
+-   **Persistent Workspaces:** Clone GitHub repositories into isolated, persistent environments
+-   **Enhanced Session Recovery:** Advanced session management survives network interruptions
 
 ## Getting Started
 
@@ -53,44 +97,63 @@ Website: [act.drmhse.com](https://act.drmhse.com)
     -   **Homepage URL:** `http://[your-server-ip/domain]:3014`
     -   **Authorization callback URL:** `http://[your-server-ip/domain]:3014/auth/github/callback`
 
-### Docker Compose (Recommended)
+### Quick Start with Docker Hub (Recommended)
 
-1.  Clone this repository:
+1.  **Download the production configuration:**
+    ```bash
+    curl -O https://raw.githubusercontent.com/drmhse/ai-code-terminal/main/app/docker-compose.yml
+    curl -O https://raw.githubusercontent.com/drmhse/ai-code-terminal/main/app/env.example
+    ```
+
+2.  **Configure your environment:**
+    ```bash
+    cp env.example .env
+    nano .env  # Edit with your GitHub OAuth credentials
+    ```
+
+3.  **Start ACT using the pre-built image:**
+    ```bash
+    docker-compose up -d
+    ```
+    *This pulls the latest multi-platform image from Docker Hub (supports both AMD64 and ARM64)*
+
+4.  **Access your environment:**
+    Open `http://[your-server-ip/domain]:3014` in your browser and log in with your authorized GitHub account.
+
+### Building from Source (Advanced)
+
+1.  **Clone and build locally:**
     ```bash
     git clone https://github.com/drmhse/ai-code-terminal.git
     cd ai-code-terminal
+    cp app/env.example app/.env
+    nano app/.env  # Configure your settings
     ```
 
-2.  Create and edit a `.env` file:
+2.  **Start with development compose:**
     ```bash
-    cp env.example .env
-    nano .env
+    docker-compose -f app/docker-compose-dev.yml up -d --build
     ```
-
-3.  Fill in your details, especially `JWT_SECRET`, your GitHub OAuth credentials, and your `TENANT_GITHUB_USERNAME`.
-
-4.  Start the application:
-    ```bash
-    docker-compose up -d --build
-    ```
-
-5.  Open `http://[your-server-ip/domain]:3014` in your browser and log in with your authorized GitHub account.
 
 ## Usage Workflow
 
-1.  **Login:** Authenticate using the "Login with GitHub" button.
-2.  **Clone a Workspace:** Clone a repository from your GitHub account.
-3.  **Enter the Shell:** Select the workspace to launch the terminal.
-4.  **Power Up with AI:** Authenticate your favorite AI CLI and start building.
+1.  **Login:** Authenticate using the "Login with GitHub" button
+2.  **Clone a Repository:** Browse and clone repositories from your GitHub account using the integrated repository browser
+3.  **Select Your Workspace:** Choose the cloned repository to enter your development environment
+4.  **Explore Your Code:** Use the integrated file explorer to navigate your project structure
+5.  **Edit Files:** Click any file to open it in the built-in CodeMirror 6 editor with syntax highlighting
+6.  **Organize Your Layout:** Create multiple terminal tabs or split panes to organize your workflow
+7.  **Run Commands:** Execute builds, tests, and development servers with full shell access
+8.  **Monitor Processes:** Track long-running processes through the integrated process supervisor
+9.  **Power Up with AI:** Authenticate your favorite AI CLI and start building
     ```bash
-    # Example for Claude Code (baked into the image)
-    claude
+    # Claude Code comes pre-installed
+    claude auth login
+    claude "help me refactor this component"
 
-    # Example for Gemini CLI (if installed)
-    gemini
-
-    # Example for Qwen-Code (if installed)
-    qwen
+    # Install and use other AI tools
+    npm install -g @google-ai/generativelanguage
+    gemini "analyze my code quality"
     ```
 
 ## Environment Variables
@@ -117,6 +180,15 @@ All configuration is managed through environment variables. Copy `env.example` t
 | `FRONTEND_URL`          | -       | Frontend URL for CORS (separate deployment)     |
 | `ALLOWED_ORIGINS`       | -       | Additional allowed CORS origins (comma-separated) |
 | `WORKSPACE_CLEANUP_DAYS` | `30`    | Auto-cleanup inactive workspaces after N days  |
+
+### Logging Configuration
+
+| Variable                 | Default | Description                                     |
+| ------------------------ | ------- | ----------------------------------------------- |
+| `LOG_LEVEL`             | `info` (production), `debug` (development) | Logging level (error, warn, info, debug) |
+| `LOG_MAX_SIZE`          | `20m`   | Maximum size of log files before rotation       |
+| `LOG_MAX_FILES`         | `30d`   | Maximum age/number of log files to retain       |
+| `LOG_COMPRESS`          | `true`  | Compress rotated log files (set `false` to disable) |
 
 ### Environment Configuration Examples
 

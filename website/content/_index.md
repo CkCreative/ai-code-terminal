@@ -1,9 +1,9 @@
 ---
 title: "AI Code Terminal: Self-Hosted Development Environment"
-description: "A comprehensive, browser-based development environment with terminal multiplexing, integrated file explorer, Claude Code support, and seamless GitHub integration. Self-hosted for complete privacy and control."
+description: "A lightweight, terminal-centric web IDE with integrated file explorer, code editor, advanced terminal multiplexing, process management, and AI assistance. Self-hosted for complete privacy and control."
 hero:
-  title: "Your Complete Development Environment in the Browser"
-  subtitle: "Self-hosted terminal multiplexing, integrated file management, AI assistance, and seamless GitHub integration. Code from anywhere—desktop, tablet, or mobile—with full privacy and control."
+  title: "Terminal-First Web IDE"
+  subtitle: "Lightweight development environment combining the power of a full-featured IDE with terminal simplicity. Integrated file explorer, CodeMirror editor, split-pane terminals, and AI assistance—all self-hosted for complete control."
   cta_primary:
     text: "Get Started"
     url: "/docs/getting-started/"
@@ -14,32 +14,38 @@ hero:
     icon: "code"
 ---
 
-# A Complete Development Environment
+# Terminal-First Development Environment
 
-AI Code Terminal transforms your browser into a powerful development environment with professional-grade terminal capabilities, integrated file management, and AI assistance—all while maintaining complete privacy through self-hosting.
+AI Code Terminal bridges the gap between a simple shell and a full-featured IDE, providing essential development tools without the bloat. Professional-grade terminal multiplexing, integrated file management, built-in code editor, and AI assistance—all while maintaining complete privacy through self-hosting.
 
 ## Core Features
 
+### Integrated File Explorer & Code Editor
+**Visual code navigation with built-in editing.** Full-featured file browser in the sidebar for intuitive project navigation. Built-in CodeMirror 6 editor with syntax highlighting for 15+ languages (JavaScript, Python, Go, Rust, Java, CSS, HTML, SQL, and more). Edit code directly in the browser with modern editor features.
+
 ### Advanced Terminal Multiplexing
-**Multiple terminals, multiple layouts.** Create unlimited terminal sessions with sophisticated layout options including tabs, horizontal/vertical splits, and grid arrangements. Each session persists across browser refreshes and network disconnections, ensuring your work never gets interrupted.
+**Professional terminal management.** Create multiple terminal tabs per workspace with sophisticated split-pane layouts (horizontal, vertical, grid). Advanced session management includes command history, process tracking, and synchronized file operations. Each session persists across browser refreshes and network disconnections, ensuring your work never gets interrupted.
 
-### Mobile-First Terminal Experience
-**Professional development on any device.** Advanced mobile terminal input overlay transforms tablets and phones into viable development machines. Features include modifier key support (Ctrl+C, Alt+Tab), command presets, intelligent autocomplete, and touch-optimized controls—making complex terminal operations effortless on touchscreens.
+### Long-Running Process Management
+**Intelligent process supervision.** Automatically detect and track long-running commands like development servers and build processes. View, stop, and restart processes through the integrated interface with optional auto-recovery for crashed processes.
 
-### Integrated File Explorer
-**Navigate your codebase visually.** Built-in sidebar file browser with syntax-highlighted previews, context menus for file operations, and search capabilities. Preview code, markdown, JSON, and images without leaving the terminal environment.
+### System Resource Monitoring
+**Real-time development insights.** Status bar displays active sessions, CPU usage, memory consumption, and workspace storage. Container-aware monitoring shows Docker resource utilization and limits for complete environment visibility.
 
-### Seamless GitHub Integration
-**Zero-configuration Git operations.** OAuth-powered GitHub authentication eliminates the need for SSH keys or personal access tokens. Clone repositories with one click, and enjoy automatic Git credential management for push/pull operations.
+### Enterprise-Grade Security
+**Secure, isolated development.** Full shell access within security-hardened Docker containers running as non-root user. Single-tenant GitHub OAuth authentication ensures only authorized users can access your environment.
 
-### AI-Powered Development
-**Claude Code pre-installed and ready.** Start using AI assistance immediately with Claude Code built into every workspace. Your API key remains under your complete control—authenticate directly with Anthropic through the secure terminal environment.
+### Mobile-First Experience
+**Professional development on any device.** Advanced mobile terminal interface with modifier key support, command presets, and touch-optimized controls. Transform tablets and phones into viable development machines.
 
-### Workspace Management
-**Isolated environments for every project.** Each GitHub repository gets its own workspace with isolated terminal sessions, automatic CLAUDE.md context generation, and persistent storage. Switch between projects instantly while maintaining separate development environments.
+### AI-Native Workflow
+**Seamless AI integration.** Claude Code comes pre-installed and ready to use. Perfect integration with CLI-based AI tools while maintaining complete control over your API keys and interactions.
 
-### Professional Theming
-**Customize your environment.** Choose from multiple carefully crafted terminal themes, or customize your own. Consistent theming across terminals, file explorer, and interface elements ensures a cohesive development experience.
+### Enhanced Session Recovery
+**Uninterrupted development flow.** Advanced session management survives network interruptions and browser refreshes. Persistent workspaces maintain your development state across connections.
+
+### Professional Theme Selection
+**Customizable visual environment.** Choose from 18 carefully crafted terminal themes with live preview in an elegant modal interface. Themes include popular options like Tokyo Night, Dracula, and custom variants, ensuring consistent styling across terminals, file explorer, code editor, and all interface elements.
 
 ## Privacy and Control
 
@@ -61,7 +67,7 @@ Runs in secure Docker containers with resource limits, read-only filesystems, an
 WebSocket-powered terminal sessions provide near-native performance with real-time input/output. Advanced terminal features like resizing, scrollback, and session recovery work seamlessly.
 
 ### Modern Web Technologies
-Built with Vue.js, Express.js, and Socket.IO for reliability and performance. Uses SQLite for lightweight data persistence and modern JavaScript throughout.
+Built with Vue.js 3, Express.js, Socket.IO, and CodeMirror 6 for reliability and performance. Uses Prisma with SQLite for lightweight data persistence, node-pty for terminal sessions, and modern JavaScript throughout.
 
 ## Deployment Options
 
@@ -74,12 +80,18 @@ Deploy to any VPS provider for true anywhere development. Full mobile accessibil
 ### Corporate/Team Use
 Self-hosted architecture makes it ideal for organizations requiring complete control over their development infrastructure and data.
 
-## Getting Started
+## Quick Start
 
-1. **Clone the repository** from GitHub
+### Using Docker Hub (Recommended)
+1. **Download configuration files** from the repository
 2. **Set up GitHub OAuth** application for authentication  
-3. **Configure environment variables** including your authorized username
-4. **Start with Docker Compose** - everything runs in secure containers
-5. **Access through browser** and begin developing immediately
+3. **Configure your environment** with GitHub credentials and authorized username
+4. **Start with pre-built image** - `docker-compose up -d`
+5. **Access via browser** at `http://your-server:3014`
 
-The complete setup takes about 10 minutes and provides you with a professional development environment accessible from any device while maintaining complete privacy and control over your code and data.
+### Building from Source (Advanced)
+1. **Clone repository** - `git clone https://github.com/drmhse/ai-code-terminal.git`
+2. **Configure environment** - Copy `env.example` to `.env` and edit
+3. **Build and start** - `docker-compose -f app/docker-compose-dev.yml up -d --build`
+
+Setup takes about 5 minutes with Docker Hub or 10 minutes building from source. Provides a complete development environment accessible from any device while maintaining complete privacy and control.
