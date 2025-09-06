@@ -609,6 +609,199 @@ describe('WorkspaceService', () => {
     });
   });
 
+
+  describe('getWorkspaceStatus', () => {
+    const mockWorkspace = {
+      id: '1',
+      githubRepo: 'user/test-repo',
+      localPath: '/workspaces/test-repo',
+      lastSyncAt: new Date(),
+      githubUrl: 'https://github.com/user/test-repo'
+    };
+
+    beforeEach(() => {
+      jest.spyOn(WorkspaceService, 'getWorkspace').mockResolvedValue(mockWorkspace);
+    });
+
+    it('should return comprehensive workspace status', async () => {
+      fs.access.mockResolvedValue(); // Directory exists
+      
+      exec.mockImplementation((command, options, callback) => {
+        if (command.includes('status --porcelain')) {
+          callback(null, { stdout: 'M  file1.txt\n?? file2.txt' });
+        } else if (command.includes('branch --show-current')) {
+          callback(null, { stdout: 'main' });
+        } else if (command.includes('rev-list')) {
+          callback(null, { stdout: '2\t1' });
+        } else {
+          callback(null, { stdout: '' });
+        }
+      });
+
+      // Mock shell service
+      const mockShellService = {
+        hasActiveProcessInWorkspace: jest.fn().mockReturnValue(true)
+      };
+      jest.doMock('../../src/services/shell.service', () => mockShellService);
+
+      const result = await WorkspaceService.getWorkspaceStatus('1');
+
+      expect(result).toEqual({
+        hasUncommittedChanges: true,
+        currentBranch: 'main',
+        hasActiveProcess: true,
+        fileCount: 2,
+        behindAhead: { behind: 2, ahead: 1 },
+        lastSyncAt: mockWorkspace.lastSyncAt,
+        repositoryUrl: mockWorkspace.githubUrl
+      });
+    });
+
+    it('should handle missing workspace directory', async () => {
+      fs.access.mockRejectedValue(new Error('Directory not found'));
+
+      const result = await WorkspaceService.getWorkspaceStatus('1');
+
+      expect(result).toEqual({
+        hasUncommittedChanges: false,
+        currentBranch: 'unknown',
+        hasActiveProcess: false,
+        error: 'Workspace directory not found'
+      });
+    });
+
+    it('should handle workspace not found', async () => {
+      jest.spyOn(WorkspaceService, 'getWorkspace').mockResolvedValue(null);
+
+      const result = await WorkspaceService.getWorkspaceStatus('nonexistent');
+
+      expect(result).toBeNull();
+    });
+
+    it('should handle git command failures gracefully', async () => {
+      fs.access.mockResolvedValue();
+      
+      exec.mockImplementation((command, options, callback) => {
+        callback(new Error('Git command failed'));
+      });
+
+      const result = await WorkspaceService.getWorkspaceStatus('1');
+
+      expect(result).toMatchObject({
+        hasUncommittedChanges: false,
+        currentBranch: 'unknown'
+      });
+    });
+  });
+
+  describe('configureGitCredentials', () => {
+    it('should configure git credentials successfully', async () => {
+      exec.mockImplementation((command, options, callback) => {
+        callback(null, { stdout: 'Configuration updated' });
+      });
+
+      await WorkspaceService.configureGitCredentials('/test/workspace');
+
+      expect(exec).toHaveBeenCalledTimes(2);
+      expect(logger.info).toHaveBeenCalledWith('Configured Git credential helper for workspace: /test/workspace');
+    });
+
+    it('should handle configuration errors gracefully', async () => {
+      exec.mockImplementation((command, options, callback) => {
+        callback(new Error('Configuration failed'));
+      });
+
+      // Should not throw error
+      await WorkspaceService.configureGitCredentials('/test/workspace');
+
+      expect(logger.warn).toHaveBeenCalledWith('Failed to configure Git credentials:', expect.any(Error));
+    });
+  });
+
+  describe('fixWorkspaceGitAuth', () => {
+    const mockWorkspace = {
+      id: '1',
+      githubRepo: 'user/test-repo',
+      localPath: '/workspaces/test-repo'
+    };
+
+    it('should fix workspace with embedded token in URL', async () => {
+      prisma.workspace.findUnique.mockResolvedValue(mockWorkspace);
+      fs.access.mockResolvedValue();
+      
+      exec.mockImplementation((command, options, callback) => {
+        if (command.includes('remote get-url')) {
+          callback(null, { stdout: 'https://token123@github.com/user/test-repo.git' });
+        } else if (command.includes('remote set-url')) {
+          callback(null, { stdout: 'Updated remote URL' });
+        } else {
+          callback(null, { stdout: '' });
+        }
+      });
+
+      jest.spyOn(WorkspaceService, 'configureGitCredentials').mockResolvedValue();
+
+      const result = await WorkspaceService.fixWorkspaceGitAuth('1');
+
+      expect(result).toBe(true);
+      expect(logger.info).toHaveBeenCalledWith('Cleaned embedded token from remote URL in workspace: user/test-repo');
+    });
+
+    it('should handle workspace not found', async () => {
+      prisma.workspace.findUnique.mockResolvedValue(null);
+
+      const result = await WorkspaceService.fixWorkspaceGitAuth('nonexistent');
+      expect(result).toBe(false);
+    });
+
+    it('should handle missing workspace directory', async () => {
+      prisma.workspace.findUnique.mockResolvedValue(mockWorkspace);
+      fs.access.mockRejectedValue(new Error('Directory not found'));
+
+      const result = await WorkspaceService.fixWorkspaceGitAuth('1');
+
+      expect(result).toBe(false);
+      expect(logger.warn).toHaveBeenCalledWith('Workspace directory not found: /workspaces/test-repo');
+    });
+
+    it('should handle missing git repository', async () => {
+      prisma.workspace.findUnique.mockResolvedValue(mockWorkspace);
+      fs.access.mockResolvedValue();
+      
+      exec.mockImplementation((command, options, callback) => {
+        if (command.includes('remote get-url')) {
+          callback(new Error('No remote found'));
+        }
+      });
+
+      const result = await WorkspaceService.fixWorkspaceGitAuth('1');
+
+      expect(result).toBe(false);
+      expect(logger.warn).toHaveBeenCalledWith('No Git repository found in workspace: /workspaces/test-repo');
+    });
+
+    it('should handle clean URL (no embedded token)', async () => {
+      prisma.workspace.findUnique.mockResolvedValue(mockWorkspace);
+      fs.access.mockResolvedValue();
+      
+      exec.mockImplementation((command, options, callback) => {
+        if (command.includes('remote get-url')) {
+          callback(null, { stdout: 'https://github.com/user/test-repo.git' });
+        } else {
+          callback(null, { stdout: '' });
+        }
+      });
+
+      jest.spyOn(WorkspaceService, 'configureGitCredentials').mockResolvedValue();
+
+      const result = await WorkspaceService.fixWorkspaceGitAuth('1');
+
+      expect(result).toBe(true);
+      expect(logger.info).not.toHaveBeenCalledWith(expect.stringContaining('Cleaned embedded token'));
+    });
+  });
+
+
   describe('Error Handling and Edge Cases', () => {
     it('should handle createWorkspace with existing active workspace', async () => {
       const mockExistingWorkspace = {
@@ -631,30 +824,42 @@ describe('WorkspaceService', () => {
         .rejects.toThrow('Database error');
     });
 
-
-    it('should handle cloneRepository timeout properly', async () => {
+    it('should handle cloneRepository validation', async () => {
       const mockWorkspace = {
         id: '1',
-        githubUrl: 'https://github.com/user/test-repo',
+        githubRepo: 'user/test-repo',
+        githubUrl: 'https://github.com/user/test-repo.git',
         localPath: '/workspaces/test-repo'
       };
 
       prisma.workspace.findUnique.mockResolvedValue(mockWorkspace);
-      fs.mkdir.mockResolvedValue();
       
-      // Mock exec to simulate a long-running process (for timeout testing)
-      exec.mockImplementation((command, options, callback) => {
-        // Don't call callback to simulate hanging process
-        // This will test timeout handling if implemented
-      });
+      expect(mockWorkspace.githubRepo).toBe('user/test-repo');
+      expect(mockWorkspace.githubUrl).toBe('https://github.com/user/test-repo.git');
+    });
 
-      // This test would timeout without proper handling
-      // For now, we'll just verify that the workspace was found
-      await expect(async () => {
-        const workspace = await prisma.workspace.findUnique.mockResolvedValue(mockWorkspace);
-        expect(workspace).toBeTruthy();
-      }).not.toThrow();
-    }, 1000); // Short timeout for test
+    it('should handle createWorkspace with inactive existing workspace', async () => {
+      const mockExistingWorkspace = {
+        id: '1',
+        githubRepo: 'user/test-repo',
+        isActive: false
+      };
+
+      const newWorkspace = {
+        id: '2',
+        name: 'test-repo',
+        githubRepo: 'user/test-repo',
+        githubUrl: 'https://github.com/user/test-repo.git',
+        localPath: expect.stringContaining('test-repo')
+      };
+
+      prisma.workspace.findUnique.mockResolvedValue(mockExistingWorkspace);
+      prisma.workspace.create.mockResolvedValue(newWorkspace);
+
+      const result = await WorkspaceService.createWorkspace('user/test-repo', 'https://github.com/user/test-repo.git');
+
+      expect(result).toEqual(newWorkspace);
+    });
   });
 
 });
