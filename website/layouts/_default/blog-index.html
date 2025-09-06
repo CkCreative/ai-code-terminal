@@ -1,0 +1,80 @@
+{{ define "main" }}
+<div class="container mx-auto px-4 py-12 max-w-5xl">
+    <div class="text-center mb-16">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+            {{ .Title }}
+        </h1>
+        <p class="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            {{ .Description }}
+        </p>
+    </div>
+
+    <div class="grid gap-8 md:gap-12">
+        {{ range .Pages.ByDate.Reverse }}
+        {{ if ne .Title "_index" }}
+        <article class="bg-gray-900/50 border border-gray-700 rounded-xl p-8 hover:border-blue-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10">
+            <div class="flex flex-wrap items-center gap-4 text-sm text-gray-400 mb-4">
+                <time datetime="{{ .Date.Format "2006-01-02" }}" class="flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    {{ .Date.Format "January 2, 2006" }}
+                </time>
+                
+                {{ $wordCount := .WordCount }}
+                {{ $readingTime := div (add $wordCount 199) 200 }}
+                <span class="flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    {{ $readingTime }} min read
+                </span>
+                
+                <span class="flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    {{ $wordCount }} words
+                </span>
+            </div>
+            
+            <h2 class="text-2xl font-bold mb-4 hover:text-blue-400 transition-colors">
+                <a href="{{ .Permalink }}" class="block">
+                    {{ .Title }}
+                </a>
+            </h2>
+            
+            {{ if .Params.subtitle }}
+            <p class="text-lg text-gray-300 mb-4">{{ .Params.subtitle }}</p>
+            {{ end }}
+            
+            <p class="text-gray-400 leading-relaxed mb-6">
+                {{ if .Summary }}
+                    {{ .Summary }}
+                {{ else }}
+                    {{ .Description }}
+                {{ end }}
+            </p>
+            
+            {{ if .Params.tags }}
+            <div class="flex flex-wrap gap-2 mb-6">
+                {{ range .Params.tags }}
+                <span class="bg-gray-800 text-blue-400 px-3 py-1 rounded-full text-sm border border-gray-700">
+                    {{ . }}
+                </span>
+                {{ end }}
+            </div>
+            {{ end }}
+            
+            <a href="{{ .Permalink }}" class="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 font-medium transition-colors">
+                Read Full Article
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </a>
+        </article>
+        {{ end }}
+        {{ end }}
+    </div>
+</div>
+{{ end }}
